@@ -124,15 +124,13 @@ public class MessageUtil {
 	/**
 	 * 解析微信发来的请求（XML）
 	 * 
-	 * @param request
-	 * @return
-	 * @throws Exception
+	 * @param request 请求
+	 * @return 返回
+	 * @throws Exception 异常
 	 */
-	@SuppressWarnings("unchecked")
-	public static Map<String, String> parseXml(HttpServletRequest request)
-			throws Exception {
+	public static Map<String, String> parseXml(HttpServletRequest request) throws Exception {
 		// 将解析结果存储在HashMap中
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 
 		// 从request中取得输入流
 		InputStream inputStream = request.getInputStream();
@@ -151,15 +149,13 @@ public class MessageUtil {
 
 		// 释放资源
 		inputStream.close();
-		inputStream = null;
-
 		return map;
 	}
 	
 	/**
 	 * 基本消息对象转换成xml
 	 * 
-	 * @param textMessage 文本消息对象
+	 * @param baseResMessage 文本消息对象
 	 * @return xml
 	 */
 	public static String messageToXml(BaseResMessage baseResMessage) {
@@ -170,7 +166,7 @@ public class MessageUtil {
 	/**
 	 * 文本消息对象转换成xml
 	 * 
-	 * @param textMessage 文本消息对象
+	 * @param textResMessage 文本消息对象
 	 * @return xml
 	 */
 	public static String messageToXml(TextResMessage textResMessage) {
@@ -181,7 +177,7 @@ public class MessageUtil {
 	/**
 	 * 图片消息对象转换成xml
 	 * 
-	 * @param imageMessage 图片消息对象
+	 * @param imageResMessage 图片消息对象
 	 * @return xml
 	 */
 	public static String messageToXml(ImageResMessage imageResMessage) {
@@ -192,7 +188,7 @@ public class MessageUtil {
 	/**
 	 * 语音消息对象转换成xml
 	 * 
-	 * @param voiceMessage 语音消息对象
+	 * @param voiceResMessage 语音消息对象
 	 * @return xml
 	 */
 	public static String messageToXml(VoiceResMessage voiceResMessage) {
@@ -203,7 +199,7 @@ public class MessageUtil {
 	/**
 	 * 视频消息对象转换成xml
 	 * 
-	 * @param videoMessage 视频消息对象
+	 * @param videoResMessage 视频消息对象
 	 * @return xml
 	 */
 	public static String messageToXml(VideoResMessage videoResMessage) {
@@ -214,7 +210,7 @@ public class MessageUtil {
 	/**
 	 * 音乐消息对象转换成xml
 	 * 
-	 * @param musicMessage 音乐消息对象
+	 * @param musicResMessage 音乐消息对象
 	 * @return xml
 	 */
 	public static String messageToXml(MusicResMessage musicResMessage) {
@@ -225,12 +221,12 @@ public class MessageUtil {
 	/**
 	 * 图文消息对象转换成xml
 	 * 
-	 * @param newsMessage 图文消息对象
+	 * @param newsResMessage 图文消息对象
 	 * @return xml
 	 */
 	public static String messageToXml(NewsResMessage newsResMessage) {
 		xstream.alias("xml", newsResMessage.getClass());
-		xstream.alias("item", new Article().getClass());
+		xstream.alias("item", Article.class);
 		return xstream.toXML(newsResMessage);
 	}
 
@@ -241,8 +237,6 @@ public class MessageUtil {
 	private static XStream xstream = new XStream(new XppDriver() {
 		public HierarchicalStreamWriter createWriter(Writer out) {
 			return new PrettyPrintWriter(out) {
-
-				@SuppressWarnings("rawtypes")
 				public void startNode(String name, Class clazz) {
 					super.startNode(name, clazz);
 				}

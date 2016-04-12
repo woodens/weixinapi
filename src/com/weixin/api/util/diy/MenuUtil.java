@@ -1,11 +1,13 @@
 package com.weixin.api.util.diy;
 
+import com.weixin.api.menu.ConditionalMenu;
+import com.weixin.api.menu.Menu;
 import net.sf.json.JSONObject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.weixin.api.menu.Menu;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 菜单的创建、查询、删除
@@ -130,5 +132,89 @@ public class MenuUtil {
             }
     	}
     	return result;
+    }
+
+	/**
+	 * 创建个性化菜单
+	 *
+	 * @param menu 菜单实例
+	 * @param accessToken 有效的access_token
+	 * @return 0表示成功，其他值表示失败
+	 *
+	 */
+	public static boolean addConditionalMenu(ConditionalMenu menu, String accessToken){
+		boolean result = false;
+		// 个性化菜单创建 限2000（次/天）
+		String addconditional_url = "https://api.weixin.qq.com/cgi-bin/menu/addconditional?access_token=ACCESS_TOKEN";
+
+		// 拼装创建个性化菜单的url
+		String url = addconditional_url.replace("ACCESS_TOKEN", accessToken);
+		// 将菜单对象转换成json字符串
+		String jsonMenu = JSONObject.fromObject(menu).toString();
+		// 发起post请求创建菜单
+		JSONObject jsonObject = CommonUtil.httpsRequest(url, "POST", jsonMenu);
+
+		if (jsonObject != null) {
+			String menuid = jsonObject.getString("menuid");
+			if(menuid!=null){
+				log.info("menuid:{}",menuid);
+				result = true;
+			}else{
+				int errorCode = jsonObject.getInt("errcode");
+				String errorMsg = jsonObject.getString("errmsg");
+				result = false;
+				log.error("创建菜单失败 errcode:{} errmsg:{}",errorCode,errorMsg);
+			}
+		}
+
+		return result;
+	}
+    /**
+     * 删除个性化菜单
+     * @param accessToken 凭证
+     * @param menuid 菜单id
+     * @return true 成功 false 失败
+     */
+    public static boolean delConditionalMenu(String accessToken,String menuid){
+        boolean result = false;
+        //菜单删除 限2000（次/天）
+        String delconditional_url = "https://api.weixin.qq.com/cgi-bin/menu/delconditional?access_token=ACCESS_TOKEN";
+
+        String requestUrl = delconditional_url.replace("ACCESS_TOKEN", accessToken);
+        Map<String,String> map = new HashMap<String,String>();
+        map.put("menuid",menuid);
+        String jsonMenu = JSONObject.fromMap(map).toString();
+        //发起get请求删除菜单
+        JSONObject jsonObject = CommonUtil.httpsRequest(requestUrl, "POST", jsonMenu);
+
+        if(jsonObject != null){
+            int errorCode = jsonObject.getInt("errcode");
+            String errorMsg = jsonObject.getString("errmsg");//正确返回{"errcode":0,"errmsg":"ok"}
+            if (errorCode == 0) {
+                result = true;
+            }else{
+                result = false;
+                log.error("删除个性化菜单失败 errcode:{} errmsg:{}",errorCode,errorMsg);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 测试个性化菜单匹配结果
+     * @param accessToken 凭证
+     * @param userId 可以是粉丝的OpenID，也可以是粉丝的微信号
+     * @return 暂时返回json对象
+     */
+    public static JSONObject tryMatchMenu(String accessToken,String userId){
+        //菜单删除 限2000（次/天）
+        String delconditional_url = "https://api.weixin.qq.com/cgi-bin/menu/trymatch?access_token=ACCESS_TOKEN";
+
+        String requestUrl = delconditional_url.replace("ACCESS_TOKEN", accessToken);
+        Map<String,String> map = new HashMap<String,String>();
+        map.put("user_id",userId);
+        String jsonMenu = JSONObject.fromMap(map).toString();
+        //发起get请求删除菜单
+        return CommonUtil.httpsRequest(requestUrl, "POST", jsonMenu);
     }
 }

@@ -1,8 +1,8 @@
 package com.weixin.api.message.event;
 
 /**
- * 事件
- *
+ * 基本事件
+ * 关注/取消关注事件即为基本事件------事件类型，subscribe(订阅)、unsubscribe(取消订阅)
  */
 public class BaseEvent {
 	//开发者微信号
@@ -15,8 +15,6 @@ public class BaseEvent {
 	private String MsgType;
 	//事件类型
 	private String Event;
-	//事件KEY值
-	private String EventKey;
 	public String getToUserName() {
 		return ToUserName;
 	}
@@ -46,11 +44,5 @@ public class BaseEvent {
 	}
 	public void setEvent(String event) {
 		Event = event;
-	}
-	public String getEventKey() {
-		return EventKey;
-	}
-	public void setEventKey(String eventKey) {
-		EventKey = eventKey;
 	}
 }
