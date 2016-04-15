@@ -112,10 +112,10 @@ public class KfUtil {
         return result;
     }
     /**
-     * 获取客服基本信息
+     * 获取所有客服账号
      *
      * @param accessToken 凭证
-     * @return
+     * @return 返回的json字符串
      */
     public static String getKfList(String accessToken)throws Exception{
         String result = null;
@@ -135,8 +135,8 @@ public class KfUtil {
      * 获取在线客服接待信息
      * 开发者利用本接口提供的信息，结合客服基本信息，可以开发例如“指定客服接待”等功能；
      * 结合会话记录，可以开发”在线客服实时服务质量监控“等功能
-     * @param accessToken
-     * @return
+     * @param accessToken 凭证
+     * @return 在线客服信息的json字符串
      * @throws Exception
      */
     public static String getOnlineKfList(String accessToken)throws Exception{
@@ -158,7 +158,7 @@ public class KfUtil {
 	 * 
 	 * @param openId 消息发送对象
 	 * @param content 文本消息内容
-	 * @return
+	 * @return 组装好的json格式文本消息
 	 */
 	public static String makeTextCustomMessage(String openId, String content) {
 		// 对消息内容中的双引号进行转义
@@ -166,54 +166,118 @@ public class KfUtil {
 		String jsonMsg = "{\"touser\":\"%s\",\"msgtype\":\"text\",\"text\":{\"content\":\"%s\"}}";
 		return String.format(jsonMsg, openId, content);
 	}
+	/**
+	 * 组装包含客服信息的文本客服消息
+	 *
+	 * @param openId 消息发送对象
+	 * @param content 文本消息内容
+	 * @param kfAccount 客服帐号
+	 * @return 组装好的json文本消息
+	 */
+	public static String makeTextCustomMessage(String openId, String content,String kfAccount) {
+		// 对消息内容中的双引号进行转义
+		content = content.replace("\"", "\\\"");
+		String jsonMsg = "{\"touser\":\"%s\",\"msgtype\":\"text\",\"text\":{\"content\":\"%s\"},\"customservice\":{\"kf_account\": \"%s\"}}";
+		return String.format(jsonMsg, openId, content,kfAccount);
+	}
 
 	/**
 	 * 组装图片客服消息
 	 * 
 	 * @param openId 消息发送对象
 	 * @param mediaId 媒体文件id
-	 * @return
+	 * @return 组装好的json图片消息
 	 */
 	public static String makeImageCustomMessage(String openId, String mediaId) {
 		String jsonMsg = "{\"touser\":\"%s\",\"msgtype\":\"image\",\"image\":{\"media_id\":\"%s\"}}";
 		return String.format(jsonMsg, openId, mediaId);
 	}
-
+	/**
+	 * 组装包含客服信息的图片客服消息
+	 *
+	 * @param openId 消息发送对象
+	 * @param mediaId 媒体文件id
+	 * @param kfAccount 客服帐号
+	 * @return 组装好的json图片消息
+	 */
+	public static String makeImageCustomMessage(String openId, String mediaId,String kfAccount) {
+		String jsonMsg = "{\"touser\":\"%s\",\"msgtype\":\"image\",\"image\":{\"media_id\":\"%s\"},\"customservice\":{\"kf_account\": \"%s\"}}";
+		return String.format(jsonMsg, openId, mediaId, kfAccount);
+	}
 	/**
 	 * 组装语音客服消息
 	 * 
 	 * @param openId 消息发送对象
 	 * @param mediaId 媒体文件id
-	 * @return
+	 * @return 组装好的json语音消息
 	 */
 	public static String makeVoiceCustomMessage(String openId, String mediaId) {
 		String jsonMsg = "{\"touser\":\"%s\",\"msgtype\":\"voice\",\"voice\":{\"media_id\":\"%s\"}}";
 		return String.format(jsonMsg, openId, mediaId);
 	}
-
-	/**
-	 * 组装视频客服消息
-	 * 
-	 * @param openId 消息发送对象
-	 * @param mediaId 媒体文件id
-	 * @param thumbMediaId 视频消息缩略图的媒体id
-	 * @return
-	 */
-	public static String makeVideoCustomMessage(String openId, String mediaId, String thumbMediaId) {
-		String jsonMsg = "{\"touser\":\"%s\",\"msgtype\":\"video\",\"video\":{\"media_id\":\"%s\",\"thumb_media_id\":\"%s\"}}";
-		return String.format(jsonMsg, openId, mediaId, thumbMediaId);
-	}
+    /**
+     * 组装包含客服信息的语音客服消息
+     *
+     * @param openId 消息发送对象
+     * @param mediaId 媒体文件id
+     * @param kfAccount 客服帐号
+     * @return 组装好的json语音消息
+     */
+    public static String makeVoiceCustomMessage(String openId, String mediaId, String kfAccount) {
+        String jsonMsg = "{\"touser\":\"%s\",\"msgtype\":\"voice\",\"voice\":{\"media_id\":\"%s\"},\"customservice\":{\"kf_account\": \"%s\"}}";
+        return String.format(jsonMsg, openId, mediaId, kfAccount);
+    }
+    /**
+     * 组装视频客服消息
+     *
+     * @param openId 消息发送对象
+     * @param mediaId 媒体文件id
+     * @param thumbMediaId 视频消息缩略图的媒体id
+     * @return 组装好的json视频客服消息
+     */
+    public static String makeVideoCustomMessage(String openId, String mediaId, String thumbMediaId) {
+        String jsonMsg = "{\"touser\":\"%s\",\"msgtype\":\"video\",\"video\":{\"media_id\":\"%s\",\"thumb_media_id\":\"%s\"}}";
+        return String.format(jsonMsg, openId, mediaId, thumbMediaId);
+    }
+    /**
+     * 组装包含客服信息的视频客服消息
+     *
+     * @param openId 消息发送对象
+     * @param mediaId 媒体文件id
+     * @param thumbMediaId 视频消息缩略图的媒体id
+     * @param kfAccount 客服帐号
+     * @return 组装好的json视频客服消息
+     */
+    public static String makeVideoCustomMessage(String openId, String mediaId, String thumbMediaId,String kfAccount) {
+        String jsonMsg = "{\"touser\":\"%s\",\"msgtype\":\"video\",\"video\":{\"media_id\":\"%s\",\"thumb_media_id\":\"%s\"},\"customservice\":{\"kf_account\": \"%s\"}}";
+        return String.format(jsonMsg, openId, mediaId, thumbMediaId, kfAccount);
+    }
 
 	/**
 	 * 组装音乐客服消息
-	 * 
+	 *
 	 * @param openId 消息发送对象
 	 * @param music 音乐对象
-	 * @return
+	 * @return 组装好的json音乐客服信息
 	 */
 	public static String makeMusicCustomMessage(String openId, Music music) {
 		String jsonMsg = "{\"touser\":\"%s\",\"msgtype\":\"music\",\"music\":%s}";
 		jsonMsg = String.format(jsonMsg, openId, JSONObject.fromObject(music).toString());
+		// 将jsonMsg中的thumbmediaid替换为thumb_media_id
+		jsonMsg = jsonMsg.replace("humbmediaid", "thumb_media_id");
+		return jsonMsg;
+	}
+	/**
+	 * 组装音乐客服消息
+	 *
+	 * @param openId 消息发送对象
+	 * @param music 音乐对象
+     * @param kfAccount 客服帐号
+	 * @return 组装好的json音乐客服信息
+	 */
+	public static String makeMusicCustomMessage(String openId, Music music, String  kfAccount) {
+		String jsonMsg = "{\"touser\":\"%s\",\"msgtype\":\"music\",\"music\":%s,\"customservice\":{\"kf_account\": \"%s\"}}";
+		jsonMsg = String.format(jsonMsg, openId, JSONObject.fromObject(music).toString(),kfAccount);
 		// 将jsonMsg中的thumbmediaid替换为thumb_media_id
 		jsonMsg = jsonMsg.replace("thumbmediaid", "thumb_media_id");
 		return jsonMsg;
@@ -224,11 +288,26 @@ public class KfUtil {
 	 * 
 	 * @param openId 消息发送对象
 	 * @param articleList 图文消息列表
-	 * @return
+	 * @return 组装好的json图片客服消息
 	 */
 	public static String makeNewsCustomMessage(String openId, List<Article> articleList) {
 		String jsonMsg = "{\"touser\":\"%s\",\"msgtype\":\"news\",\"news\":{\"articles\":%s}}";
 		jsonMsg = String.format(jsonMsg, openId, JSONArray.fromObject(articleList).toString().replaceAll("\"", "\\\""));
+		// 将jsonMsg中的picUrl替换为picurl
+		jsonMsg = jsonMsg.replace("picUrl", "picurl");
+		return jsonMsg;
+	}
+	/**
+	 * 组装图文客服消息
+	 *
+	 * @param openId 消息发送对象
+	 * @param articleList 图文消息列表
+     * @param kfAccount 客服帐号
+	 * @return 组装好的json图片客服消息
+	 */
+	public static String makeNewsCustomMessage(String openId, List<Article> articleList, String kfAccount) {
+		String jsonMsg = "{\"touser\":\"%s\",\"msgtype\":\"news\",\"news\":{\"articles\":%s},\"customservice\":{\"kf_account\": \"%s\"}}";
+		jsonMsg = String.format(jsonMsg, openId, JSONArray.fromObject(articleList).toString().replaceAll("\"", "\\\""), kfAccount);
 		// 将jsonMsg中的picUrl替换为picurl
 		jsonMsg = jsonMsg.replace("picUrl", "picurl");
 		return jsonMsg;
@@ -265,36 +344,36 @@ public class KfUtil {
 	}
 
 	public static void main(String args[]) {
-		// 获取接口访问凭证
-		String accessToken = CommonUtil.getAccessToken("APPID", "APPSECRET").getAccessToken();
-
-		/**
-		 * 发送客服消息（文本消息）
-		 */
-		// 组装文本客服消息
-		String jsonTextMsg = makeTextCustomMessage("oEdzejiHCDqafJbz4WNJtWTMbDcE", "点击查看<a href=\"http://blog.csdn.net/lyq8479\">柳峰的博客</a>");
-		// 发送客服消息
-		sendCustomMessage(accessToken, jsonTextMsg);
-
-		/**
-		 * 发送客服消息（图文消息）
-		 */
-		Article article1 = new Article();
-		article1.setTitle("微信上也能斗地主");
-		article1.setDescription("");
-		article1.setPicUrl("http://www.egouji.com/xiaoq/game/doudizhu_big.png");
-		article1.setUrl("http://resource.duopao.com/duopao/games/small_games/weixingame/Doudizhu/doudizhu.htm");
-		Article article2 = new Article();
-		article2.setTitle("傲气雄鹰\n80后不得不玩的经典游戏");
-		article2.setDescription("");
-		article2.setPicUrl("http://www.egouji.com/xiaoq/game/aoqixiongying.png");
-		article2.setUrl("http://resource.duopao.com/duopao/games/small_games/weixingame/Plane/aoqixiongying.html");
-		List<Article> list = new ArrayList<Article>();
-		list.add(article1);
-		list.add(article2);
-		// 组装图文客服消息
-		String jsonNewsMsg = makeNewsCustomMessage("oEdzejiHCDqafJbz4WNJtWTMbDcE", list);
-		// 发送客服消息
-		sendCustomMessage(accessToken, jsonNewsMsg);
+//		// 获取接口访问凭证
+//		String accessToken = CommonUtil.getAccessToken("APPID", "APPSECRET").getAccessToken();
+//
+//		/**
+//		 * 发送客服消息（文本消息）
+//		 */
+//		// 组装文本客服消息
+//		String jsonTextMsg = KfUtil.makeTextCustomMessage("oEdzejiHCDqafJbz4WNJtWTMbDcE", "点击查看<a href=\"http://blog.csdn.net/lyq8479\">柳峰的博客</a>");
+//		// 发送客服消息
+//        KfUtil.sendCustomMessage(accessToken, jsonTextMsg);
+//
+//		/**
+//		 * 发送客服消息（图文消息）
+//		 */
+//		Article article1 = new Article();
+//		article1.setTitle("微信上也能斗地主");
+//		article1.setDescription("");
+//		article1.setPicUrl("http://www.egouji.com/xiaoq/game/doudizhu_big.png");
+//		article1.setUrl("http://resource.duopao.com/duopao/games/small_games/weixingame/Doudizhu/doudizhu.htm");
+//		Article article2 = new Article();
+//		article2.setTitle("傲气雄鹰\n80后不得不玩的经典游戏");
+//		article2.setDescription("");
+//		article2.setPicUrl("http://www.egouji.com/xiaoq/game/aoqixiongying.png");
+//		article2.setUrl("http://resource.duopao.com/duopao/games/small_games/weixingame/Plane/aoqixiongying.html");
+//		List<Article> list = new ArrayList<Article>();
+//		list.add(article1);
+//		list.add(article2);
+//		// 组装图文客服消息
+//		String jsonNewsMsg = KfUtil.makeNewsCustomMessage("oEdzejiHCDqafJbz4WNJtWTMbDcE", list);
+//		// 发送客服消息
+//        KfUtil.sendCustomMessage(accessToken, jsonNewsMsg);
 	}
 }
