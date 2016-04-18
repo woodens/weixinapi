@@ -6,13 +6,13 @@ package com.weixin.api.message.res;
  */
 public class ImageResMessage extends BaseResMessage{
 	//通过上传多媒体文件，得到的id
-	private String MediaId;
+	private Image Image;
 
-	public String getMediaId() {
-		return MediaId;
+	public com.weixin.api.message.res.Image getImage() {
+		return Image;
 	}
 
-	public void setMediaId(String mediaId) {
-		MediaId = mediaId;
+	public void setImage(com.weixin.api.message.res.Image image) {
+		Image = image;
 	}
 }
