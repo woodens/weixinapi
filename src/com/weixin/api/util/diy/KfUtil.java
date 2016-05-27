@@ -1,17 +1,14 @@
 package com.weixin.api.util.diy;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import com.weixin.api.message.res.Article;
 import com.weixin.api.message.res.Music;
 import com.weixin.api.pojo.Kf;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * 客服工具类
