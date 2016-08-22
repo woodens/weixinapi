@@ -1,7 +1,9 @@
 package com.weixin.api.util.diy;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.weixin.api.pojo.SNSUserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +53,7 @@ public class UserUtil {
 	}
 	/**
 	 * 获取用户信息
-	 * 
+	 *
 	 * @param accessToken 接口访问凭证
 	 * @param openId 用户标识
 	 * @return WeixinUserInfo
@@ -101,22 +103,60 @@ public class UserUtil {
 	}
 
 	/**
+	 * 获取授权用户信息
+	 *
+	 * @param accessToken 接口访问凭证
+	 * @param openid 用户标识
+	 * @return
+     */
+	public static SNSUserInfo getSNSUserInfo(String accessToken,String openid){
+		SNSUserInfo snsUserInfo = null;
+		String requestUrl = "https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
+		requestUrl = requestUrl.replace("ACCESS_TOKEN", accessToken).replace("OPENID", openid);
+		// 获取用户信息
+		JSONObject jsonObject = CommonUtil.httpsRequest(requestUrl, "GET", null);
+
+		if (jsonObject != null) {
+			try {
+				snsUserInfo = new SNSUserInfo();
+				snsUserInfo.setOpenid(jsonObject.getString("openid"));
+				snsUserInfo.setNickname(jsonObject.getString("nickname"));
+				snsUserInfo.setSex(jsonObject.getInt("sex"));
+				snsUserInfo.setProvince(jsonObject.getString("province"));
+				snsUserInfo.setCity(jsonObject.getString("city"));
+				snsUserInfo.setCountry(jsonObject.getString("country"));
+				snsUserInfo.setHeadImgUrl(jsonObject.getString("headimgurl"));
+				JSONArray jsonArray = jsonObject.getJSONArray("privilege");
+				List<String> list = new ArrayList<>();
+				for (int i = 0; i < jsonArray.length(); i++) {
+					list.add(jsonArray.getString(i));
+				}
+				snsUserInfo.setPrivilegeList(list);
+				snsUserInfo.setUnionid(jsonObject.getString("unionid"));
+			}catch (Exception e){
+				log.error("授权获取微信用户信息错误"+e.getMessage(),e);
+			}
+		}
+		return snsUserInfo;
+	}
+
+	/**
 	 * 获取关注者列表
-	 * 
+	 *
 	 * @param accessToken 调用接口凭证
-	 * @param nextOpenId 第一个拉取的openId，不填默认从头开始拉取
+	 * @param nextOpenid 第一个拉取的openId，不填默认从头开始拉取
 	 * @return WeixinUserList
 	 */
 	@SuppressWarnings( { "unchecked" })
-	public static WeixinUserList getUserList(String accessToken, String nextOpenId) {
+	public static WeixinUserList getUserList(String accessToken, String nextOpenid) {
 		WeixinUserList weixinUserList = null;
 
-		if (null == nextOpenId)
-			nextOpenId = "";
+		if (null == nextOpenid)
+			nextOpenid = "";
 
 		// 拼接请求地址
 		String requestUrl = "https://api.weixin.qq.com/cgi-bin/user/get?access_token=ACCESS_TOKEN&next_openid=NEXT_OPENID";
-		requestUrl = requestUrl.replace("ACCESS_TOKEN", accessToken).replace("NEXT_OPENID", nextOpenId);
+		requestUrl = requestUrl.replace("ACCESS_TOKEN", accessToken).replace("NEXT_OPENID", nextOpenid);
 		// 获取关注者列表
 		JSONObject jsonObject = CommonUtil.httpsRequest(requestUrl, "GET", null);
 		// 如果请求成功
@@ -125,9 +165,9 @@ public class UserUtil {
 				weixinUserList = new WeixinUserList();
 				weixinUserList.setTotal(jsonObject.getInt("total"));
 				weixinUserList.setCount(jsonObject.getInt("count"));
-				weixinUserList.setNextOpenId(jsonObject.getString("next_openid"));
+				weixinUserList.setNextOpenid(jsonObject.getString("next_openid"));
 				JSONObject dataObject = (JSONObject) jsonObject.get("data");
-				weixinUserList.setOpenIdList(JSONArray.toList(dataObject.getJSONArray("openid"), List.class));
+				weixinUserList.setOpenidList(JSONArray.toList(dataObject.getJSONArray("openid"), List.class));
 			} catch (JSONException e) {
 				weixinUserList = null;
 				int errorCode = jsonObject.getInt("errcode");
@@ -142,7 +182,7 @@ public class UserUtil {
 //------------------------------------------------------------------------
 	/**
 	 * 查询分组
-	 * 
+	 *
 	 * @param accessToken 调用接口凭证
 	 */
 	@SuppressWarnings( { "unchecked" })
@@ -169,7 +209,7 @@ public class UserUtil {
 
 	/**
 	 * 创建分组
-	 * 
+	 *
 	 * @param accessToken 接口访问凭证
 	 * @param groupName 分组名称
 	 * @return
@@ -201,7 +241,7 @@ public class UserUtil {
 
 	/**
 	 * 修改分组名
-	 * 
+	 *
 	 * @param accessToken 接口访问凭证
 	 * @param groupId 分组id
 	 * @param groupName 修改后的分组名
@@ -232,7 +272,7 @@ public class UserUtil {
 
 	/**
 	 * 移动用户分组
-	 * 
+	 *
 	 * @param accessToken 接口访问凭证
 	 * @param openId 用户标识
 	 * @param groupId 分组id
@@ -260,11 +300,11 @@ public class UserUtil {
 		}
 		return result;
 	}
-	
+
 	public static void main(String[] args) {
 		// 获取接口访问凭证
 		String accessToken = CommonUtil.getAccessToken("APPID", "APPSECRET").getAccessToken();
-		
+
 		/**
 		 * 获取用户信息
 		 */
@@ -286,8 +326,8 @@ public class UserUtil {
 		WeixinUserList weixinUserList = getUserList(accessToken, "");
 		System.out.println("总关注用户数：" + weixinUserList.getTotal());
 		System.out.println("本次获取用户数：" + weixinUserList.getCount());
-		System.out.println("OpenID列表：" + weixinUserList.getOpenIdList().toString());
-		System.out.println("next_openid：" + weixinUserList.getNextOpenId());
+		System.out.println("OpenID列表：" + weixinUserList.getOpenidList().toString());
+		System.out.println("next_openid：" + weixinUserList.getNextOpenid());
 
 		/**
 		 * 查询分组

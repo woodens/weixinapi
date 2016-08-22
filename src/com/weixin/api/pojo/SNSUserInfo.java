@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class SNSUserInfo {
 	// 用户标识
-	private String openId;
+	private String openid;
 	// 用户昵称
 	private String nickname;
 	// 性别（1是男性，2是女性，0是未知）
@@ -23,13 +23,14 @@ public class SNSUserInfo {
 	private String headImgUrl;
 	// 用户特权信息
 	private List<String> privilegeList;
-
-	public String getOpenId() {
-		return openId;
+	//微信公众平台唯一码
+	private String unionid;
+	public String getOpenid() {
+		return openid;
 	}
 
-	public void setOpenId(String openId) {
-		this.openId = openId;
+	public void setOpenid(String openid) {
+		this.openid = openid;
 	}
 
 	public String getNickname() {
@@ -86,5 +87,13 @@ public class SNSUserInfo {
 
 	public void setPrivilegeList(List<String> privilegeList) {
 		this.privilegeList = privilegeList;
+	}
+
+	public String getUnionid() {
+		return unionid;
+	}
+
+	public void setUnionid(String unionid) {
+		this.unionid = unionid;
 	}
 }

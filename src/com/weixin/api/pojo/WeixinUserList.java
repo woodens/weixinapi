@@ -12,9 +12,9 @@ public class WeixinUserList {
 	// 获取的OpenID个数
 	private int count;
 	// OpenID列表
-	private List<String> openIdList;
+	private List<String> openidList;
 	// 拉取列表的后一个用户的OPENID
-	private String nextOpenId;
+	private String nextOpenid;
 
 	public int getTotal() {
 		return total;
@@ -32,19 +32,19 @@ public class WeixinUserList {
 		this.count = count;
 	}
 
-	public List<String> getOpenIdList() {
-		return openIdList;
+	public List<String> getOpenidList() {
+		return openidList;
 	}
 
-	public void setOpenIdList(List<String> openIdList) {
-		this.openIdList = openIdList;
+	public void setOpenidList(List<String> openidList) {
+		this.openidList = openidList;
 	}
 
-	public String getNextOpenId() {
-		return nextOpenId;
+	public String getNextOpenid() {
+		return nextOpenid;
 	}
 
-	public void setNextOpenId(String nextOpenId) {
-		this.nextOpenId = nextOpenId;
+	public void setNextOpenid(String nextOpenid) {
+		this.nextOpenid = nextOpenid;
 	}
 }
