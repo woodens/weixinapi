@@ -12,7 +12,7 @@ public class SNSUserInfo {
 	// 用户昵称
 	private String nickname;
 	// 性别（1是男性，2是女性，0是未知）
-	private int sex;
+	private Integer sex;
 	// 国家
 	private String country;
 	// 省份
@@ -40,11 +40,11 @@ public class SNSUserInfo {
 		this.nickname = nickname;
 	}
 
-	public int getSex() {
+	public Integer getSex() {
 		return sex;
 	}
 
-	public void setSex(int sex) {
+	public void setSex(Integer sex) {
 		this.sex = sex;
 	}
 
